@@ -52,6 +52,7 @@
       margin: 0;
       padding: 0;
       position: relative;
+      scroll-behavior: smooth; /* Enables smooth scrolling for anchor links */
     }
 
     /* --- Navbar Style (FIXED RESPONSIVE) --- */
@@ -85,7 +86,6 @@
        width: 50px;
        border-radius: 50%;
        object-fit: cover;
-       /* تمت إزالة opacity: 0 و transition لأن الصفحة تفتح فوراً */
     }
 
     .nav-links {
@@ -201,6 +201,9 @@
       transition: transform 1.0s, box-shadow 1.0s;
       width: 100%;
       height: 100%;
+      
+      /* ✅ FIX: Adds space so the navbar doesn't cover the project when jumping to ID */
+      scroll-margin-top: 150px; 
     }
 
     .project-card:hover {
@@ -504,7 +507,7 @@
 
             <div class="projects-container">
                 <!-- Project 1 -->
-                <div class="project-card">
+                <div class="project-card" id="project1">
                 <img src="WhatsApp Image 2025-11-27 at 21.49.14_87b8957f.jpg" alt="Project 1">
                 <h3> Personal Profile Simulation</h3>
                 <p>
@@ -516,7 +519,7 @@
                 </div>
 
                 <!-- Project 2 -->
-                <div class="project-card">
+                <div class="project-card" id="project2">
                 <img src="fhfghfgh.png" alt="Project 2">
                 <h3>Basic Form Field</h3>
                 <p>
@@ -527,7 +530,7 @@
                 </div>
 
                 <!-- Project 3 -->
-                <div class="project-card">
+                <div class="project-card" id="project3">
                 <img src="klsahlksah.png" alt="Project 3">
                 <h3>Pricing example</h3>
                 <p>This is a template for a pricing page built with Bootstrap. It displays the different subscription plans,
@@ -537,7 +540,7 @@
                 </div>
 
                 <!-- Project 4 -->
-                <div class="project-card">
+                <div class="project-card" id="project4">
                 <img src="oasdlkhd.png" alt="Project 4">
                 <h3>OMNIFOOD</h3>
                 <p>Omnifood is a healthy meal subscription service designed to deliver food to you daily, with automatically
@@ -546,7 +549,7 @@
                 </div>
 
                 <!-- Project 5 -->
-                <div class="project-card">
+                <div class="project-card" id="project5">
                 <img src="kjashduusd.png" alt="Project 5">
                 <h3>Property</h3>
                 <p>A real estate website template designed to showcase properties in a professional and attractive manner. It
@@ -556,7 +559,7 @@
                 </div>
 
                 <!-- Project 6 -->
-                <div class="project-card">
+                <div class="project-card" id="project6">
                 <img src="Screenshot (195).png" alt="Project 6">
                 <h3> exam </h3>
                 <p>simulation for a real exam web  
@@ -565,21 +568,18 @@
                 </div>
 
 
-                  <!-- Project 7 (جديد) -->
-    <div class="project-card">
-      <!-- يمكنك استبدال الرابط أدناه بصورة المشروع الخاص بك -->
+                  <!-- Project 7 -->
+    <div class="project-card" id="project7">
       <img src="Screenshot (204).png" alt="Project 7">
       <h3> color pattern</h3>
         <p>
         A CSS-based color pattern demo showcasing dynamic gradients and structured layouts. Built with pure HTML and CSS,
          it highlights color theory, pattern repetition, and responsive design—ideal for UI backgrounds and web design explorations.</p>
-      <!-- استبدل # برابط المشروع عند توفره -->
       <a href="https://jwdhlaj-ai.github.io/color-pattern/" target="_blank">View Project</a>
     </div>
 
-    <!-- Project 8 (جديد) -->
-    <div class="project-card">
-      <!-- يمكنك استبدال الرابط أدناه بصورة المشروع الخاص بك -->
+    <!-- Project 8 -->
+    <div class="project-card" id="project8">
       <img src="Screenshot (198).png" alt="Project 8">
       <h3>Web Banner</h3>
       <p>This project is a clean and interactive promotional web banner built with HTML and CSS, designed to deliver a clear and engaging marketing message while emphasizing clarity, readability, and responsiveness.
@@ -588,7 +588,6 @@ Brand Logo:
 Main Message: Pure Clean. Pure Earth.
 Short Description: Plant‑based laundry solutions.
 Call-to-Action (CTA): Shop the Range</p>
-      <!-- استبدل # برابط المشروع عند توفره -->
       <a href="https://jwdhlaj-ai.github.io/web-baner/" target="_blank">View Project</a>
     </div>
             </div>
@@ -671,7 +670,6 @@ Call-to-Action (CTA): Shop the Range</p>
       }
 
       // Navbar Scroll Effect
-      // تم الاستغناء عن انيميشن التحميل، لذا هذا الكود يعمل مباشرة
       window.addEventListener('scroll', () => {
         const currentScrollY = window.scrollY;
 
@@ -683,6 +681,40 @@ Call-to-Action (CTA): Shop the Range</p>
           navbar.style.padding = '10px 30px';
           navbar.style.top = '20px';
           navbar.style.boxShadow = '0 5px 15px #978d5d';
+        }
+      });
+
+      // --- NEW: Handle Project Link Scrolling on Load ---
+      // Checks if URL has a hash (e.g., #project7) and scrolls to it
+      window.addEventListener('load', () => {
+        if (window.location.hash) {
+          const hash = window.location.hash.substring(1); // remove '#'
+          const targetElement = document.getElementById(hash);
+          
+          if (targetElement) {
+            // Allow a brief moment for layout to settle, then scroll smoothly
+            setTimeout(() => {
+              targetElement.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+              });
+
+              // Add a visual highlight effect (orange glow) temporarily
+              const originalBoxShadow = targetElement.style.boxShadow;
+              const originalTransform = targetElement.style.transform;
+              
+              targetElement.style.transition = 'all 0.5s ease';
+              targetElement.style.boxShadow = '0 0 25px 5px rgba(255, 165, 0, 0.9)'; // Orange glow
+              targetElement.style.transform = 'scale(1.02)';
+              
+              // Remove highlight after 2 seconds
+              setTimeout(() => {
+                targetElement.style.boxShadow = originalBoxShadow;
+                targetElement.style.transform = originalTransform;
+              }, 2000);
+              
+            }, 100);
+          }
         }
       });
     });
